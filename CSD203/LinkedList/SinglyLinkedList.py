@@ -1,37 +1,6 @@
-# from StudentManagement import Student
-class Student:
-    def __init__(self, id: str, name: str, mark: int) -> None:
-        self.__id: str = id
-        self.__name: str = name
-        self.__mark: int = mark
-
-    def setID(self, id: str):
-        self.__id = id
-
-    def getID(self):
-        return self.__id
-
-    def setName(self, name: str):
-        self.__name = name
-
-    def getName(self):
-        return self.__name
-
-    def setMark(self, mark: int):
-        self.__mark = mark
-
-    def getMark(self):
-        return self.__mark
-    
-    def create(self):
-        id = input("Enter new student ID: ")
-        name = input("Enter new student name: ")
-        mark = int(input("Enter new student mark: "))
-
-
 class Node:
-    def __init__(self, stu):
-        self.__value = stu
+    def __init__(self, value: int):
+        self.__value = value
         self.__next = None
 
     def getNext(self):
@@ -50,12 +19,14 @@ class SinglyLinkedList:
     def __init__(self):
         self.__head = None
         self.__size = 0
-        self.__tail = 0
+
+    def getHead(self):
+        return self.__head
 
     def getSize(self):
         return self.__size
 
-    def __insertFirst(self, value: int):
+    def insertFirst(self, value: int):
         newNode = Node(value)
         if self.__head is None:
             self.__head = newNode
@@ -65,7 +36,7 @@ class SinglyLinkedList:
         self.__size += 1
         return True
 
-    def append(self, value: int):
+    def insertLast(self, value: int):
         newNode = Node(value)
         if self.__head is None:
             self.__head = newNode
@@ -79,14 +50,14 @@ class SinglyLinkedList:
 
     def insertion(self, value: int, index: int):
         if self.__size == 0:
-            return self.append(value)
+            return self.insertLast(value)
         elif index > self.__size or index < 0:
             print("Index is out of linked list!!!")
             return False
         elif index == 0:
-            return self.__insertFirst(value)
+            return self.insertFirst(value)
         elif index == self.__size:
-            return self.append(value)
+            return self.insertLast(value)
         else:
             temp = self.__head
             newNode = Node(value)
@@ -97,7 +68,7 @@ class SinglyLinkedList:
             temp.setNext(newNode)
             self.__size += 1
 
-    def __deleteFirst(self):
+    def deleteFirst(self):
         if self.__head is None:
             print("There is no element in the linked list to remove!!!")
             return False
@@ -108,7 +79,7 @@ class SinglyLinkedList:
             self.__size -= 1
         return True
 
-    def __deleteLast(self):
+    def deleteLast(self):
         if self.__head is None:
             print("There is no element in the linked list to remove!!!")
         else:
@@ -119,15 +90,15 @@ class SinglyLinkedList:
                 last = last.getNext()
             temp.setNext(None)
             self.__size -= 1
-        return True
+        return last.getValue()
 
     def deletion(self, index: int):
         if self.__head == None and index >= self.__size:
             return False
         elif index == 0:
-            return self.__deleteFirst()
+            return self.deleteFirst()
         elif index == self.__size - 1:
-            return self.__deleteLast()
+            return self.deleteLast()
         else:
             temp = self.__head
             while index > 1:
@@ -175,7 +146,7 @@ class SinglyLinkedList:
         return True
     
 
-    def show(self):
+    def display(self):
         p = self.__head
         while p != None:
             print(p.getValue(), end=" ")
@@ -193,7 +164,7 @@ def main():
     linkedArray.deletion(3)
     linkedArray.searchByIndex(3)
     
-    linkedArray.show() # print linked list
+    linkedArray.display() # print linked list
     size = linkedArray.getSize()
     print("size: ",size)
 
