@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, data: str) -> None:
+    def __init__(self, data: int) -> None:
         self.data = data
         self.right = None
         self.left = None
@@ -9,7 +9,7 @@ class BinaryTree:
         self.root = node
 
     def height(self, node: Node):
-        if self.root is None:
+        if node is None:
             return 0
         else:
             left_height = self.height(node.left)
@@ -33,3 +33,13 @@ class BinaryTree:
     
     def postOrder(self, node: Node):
         pass
+
+if __name__ == "__main__":
+    root = Node(1)
+    root.left = Node(2)
+    root.right = Node(3)
+    root.left.left = Node(4)
+    root.left.right = Node(5)
+    root.left.right.left = Node(6)
+    b = BinaryTree(root)
+    print(b.height(root))
