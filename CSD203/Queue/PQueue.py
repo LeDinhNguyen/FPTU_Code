@@ -43,7 +43,7 @@ class Node:
     def set_next(self, new_next):
         self.__next = new_next
 
-class PriorityQueue:
+class PQueue:
     def __init__(self):
         self.__head = None
         self.__size = 0
@@ -104,7 +104,7 @@ class PriorityQueue:
                 p = p.get_next()
 
 st = Student(1, "x", 3)
-p = PriorityQueue()
+p = PQueue()
 p.display()
 print('//')
 p.add(1, st)
