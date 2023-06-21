@@ -49,7 +49,7 @@ class BinaryTree:
     def inOrder(self, node):
         if node is not None:
             self.inOrder(node.left)
-            print(node.data.showInfo(), end=' ')
+            node.data.showInfo()
             self.inOrder(node.right)
 
     def search(self, root: Node, key: str):
