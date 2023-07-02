@@ -27,7 +27,7 @@ class AirportSystem:
             newAirport.number = self.size
             for i in range(self.size):
                 # cost = int(input(f"Enter cost from {newAirport.name} to {self.airports[i].name}: "))
-                cost = random.randint(0, 100)
+                cost = random.randint(0, 200)
                 print(f"Enter cost from {newAirport.name} to {self.airports[i].name}: ", cost)
                 self.airports[i].cost.append(cost)
                 newAirport.cost.insert(i, cost)
@@ -56,7 +56,7 @@ class AirportSystem:
                 self.airports[i].cost[airport.number] = cost
                 airport.cost[i] = cost 
 
-    def display(self):
+    def showMatrix(self):
         space = 3
         matrix = self.__toMatrix()
         print(" " * (space), end=" ")
@@ -71,6 +71,12 @@ class AirportSystem:
             
             print()
 
+    def showAirports(self):
+        print("All airports: ", end=" ")
+        for airport in self.airports:
+            print(airport.name, end=" ")
+        print()
+
     def __toMatrix(self):
         matrix = []
         for item in self.airports:
@@ -78,17 +84,93 @@ class AirportSystem:
 
         return matrix
 
-    def findPath(self):
-        pass
+    def __dijkstra(self, start, end):
+        numNodes = self.size
+        distances = {node: float("inf") for node in range(numNodes)}
+        distances[start] = 0 # itself weight = 0 
+        visited = set() # directed path
+        previous = {}
+        
+        while len(visited) <  numNodes:
+            # tim khoang cach nho nhat
+            min_distance = float("inf")
+            u = None
+            for i in range(numNodes):
+                if i not in visited and distances[i] < min_distance:
+                    min_distance = distances[i]
+                    u = i
+            # print(u)
+
+            # meet the end node
+            if u == end:
+                break
+
+            visited.add(u)
+            # Relaxation: d[v] = min(d[v], d[u] + (v, u))
+            # update weight for all adjency node
+            for v in range(numNodes):
+                w = self.__toMatrix()[u][v]
+                if v not in visited and w > 0:
+                    if distances[v] > distances[u] + w:
+                        distances[v] = distances[u] + w
+                        # print(distances[v])
+                        previous[v] = u 
+
+        print("Here")
+        path = []
+        curr = end
+        while curr in previous:
+            path.append(curr)
+            curr = previous[curr]
+        path.append(start)
+        path.reverse()
+
+        return path, distances[end]
+    
+    def showPath(self, start, end):
+        path, d = self.__dijkstra(start, end)
+        print(f"Path: {path[0]}", end=" ")
+        for i in range(1, len(path)):
+            print("--> ", end=f"{i} ")
+        print("")
+        print(f"Total cost: {d}")
 
 def menu():
-    pass
+    print("""
+        1. Add an airport
+        2. Remove an airport
+        3. Edit information of airport
+        4. Show all airports
+    """)
+
+def main():
+    system = AirportSystem()
+    while True:
+        menu()
+        option = int(input("Enter option: "))
+        if option == 1:
+            name = input("Enter name of an airport: ")
+            airport = Airport(name)
+            system.insert(airport)
+        elif option == 2:
+            name = input("Enter airport to remove: ")
+            system.delete(name)
+        elif option == 3:
+            name = input("Enter airport to edit information: ")
+            system.update(name)
+        elif option == 4:
+            for airport in system.airports:
+                print(airport.name, end=" ")
+        elif option == 5:
+            break
+        else:
+            print("Unvalid option!!!")
+            continue
 
 if __name__ == "__main__":
     system = AirportSystem()
-    system.insert("a")
-    system.insert("b")
-    system.insert("c")
-    system.insert("d")
-    system.insert("e")
-    system.display()
+    for i in range(300):
+        system.insert(Airport(str(i)))
+    system.showPath(0, 50)
+    system.showAirports()
+
