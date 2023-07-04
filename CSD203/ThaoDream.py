@@ -99,7 +99,6 @@ class AirportSystem:
                 if i not in visited and distances[i] < min_distance:
                     min_distance = distances[i]
                     u = i
-            # print(u)
 
             # meet the end node
             if u == end:
@@ -113,7 +112,6 @@ class AirportSystem:
                 if v not in visited and w > 0:
                     if distances[v] > distances[u] + w:
                         distances[v] = distances[u] + w
-                        # print(distances[v])
                         previous[v] = u 
 
         print("Here")
