@@ -10,7 +10,13 @@ class AirportSystem:
         self.airports = []
         self.size = 0
 
-    def __getAirport(self, name: str):
+    def __checkAirport(self, name) -> bool:
+        for airport in self.airports:
+            if airport.name == name:
+                return True
+        return False
+
+    def __getAirport(self, name: str) -> Airport:
         selectedAirport = None
         for airport in self.airports:
             if airport.name == name:
@@ -19,9 +25,8 @@ class AirportSystem:
             print("Unexisted airport!!")
         return selectedAirport
 
-    def insert(self, newAirport: Airport | str):
-        if isinstance(newAirport, str):
-            newAirport = Airport(newAirport)
+    def insert(self, name: str) -> None:
+        newAirport = Airport(name)
 
         if self.airports:
             newAirport.number = self.size
@@ -36,7 +41,7 @@ class AirportSystem:
             self.airports.append(newAirport)
         self.size += 1
 
-    def delete(self, name: str):
+    def delete(self, name: str) -> None:
         number = 0
         for airport in self.airports:
             if airport.name == name:
@@ -48,7 +53,7 @@ class AirportSystem:
             self.airports[i].cost.pop(number)
             self.airports[i].number = i
 
-    def update(self, name: str):
+    def update(self, name: str) -> None:
         airport = self.__getAirport(name)
         for i in range(self.size):
             if i != airport.number:
@@ -56,7 +61,7 @@ class AirportSystem:
                 self.airports[i].cost[airport.number] = cost
                 airport.cost[i] = cost 
 
-    def showMatrix(self):
+    def showMatrix(self) -> None:
         space = 3
         matrix = self.__toMatrix()
         print(" " * (space), end=" ")
@@ -68,23 +73,25 @@ class AirportSystem:
             print(self.airports[i].name.ljust(space), end= "|")
             for j in range(self.size):
                 print(f" {str(matrix[i][j]).ljust(space)}", end="|")
-            
             print()
 
-    def showAirports(self):
-        print("All airports: ", end=" ")
-        for airport in self.airports:
-            print(airport.name, end=" ")
-        print()
+    def showAirports(self) -> None:
+        if self.size > 0:
+            print("All airports: ", end=" ")
+            for airport in self.airports:
+                print(airport.name, end=" ")
+            print()
+        else:
+            print("There is no airports in system!!!")
 
-    def __toMatrix(self):
+    def __toMatrix(self) -> list:
         matrix = []
         for item in self.airports:
             matrix.append(item.cost)
 
         return matrix
 
-    def __dijkstra(self, start, end):
+    def __dijkstra(self, start, end) -> set:
         numNodes = self.size
         distances = {node: float("inf") for node in range(numNodes)}
         distances[start] = 0 # itself weight = 0 
@@ -125,20 +132,25 @@ class AirportSystem:
 
         return path, distances[end]
     
-    def showPath(self, start, end):
-        path, d = self.__dijkstra(start, end)
-        print(f"Path: {path[0]}", end=" ")
-        for i in range(1, len(path)):
-            print("--> ", end=f"{i} ")
-        print("")
-        print(f"Total cost: {d}")
+    def showPath(self, start, end) -> None:
+        if self.__checkAirport(start) and self.__checkAirport(end):
+            path, d = self.__dijkstra(start, end)
+            print(f"Path: {path[0]}", end=" ")
+            for i in range(1, len(path)):
+                print("--> ", end=f"{i} ")
+            print("")
+            print(f"Total cost: {d}")
+        else:
+            print("There is existed airport at start or end destination!!!")
 
 def menu():
     print("""
+        0. Exit
         1. Add an airport
         2. Remove an airport
         3. Edit information of airport
         4. Show all airports
+        5. Find shortest path
     """)
 
 def main():
@@ -146,10 +158,11 @@ def main():
     while True:
         menu()
         option = int(input("Enter option: "))
-        if option == 1:
-            name = input("Enter name of an airport: ")
-            airport = Airport(name)
-            system.insert(airport)
+        if option == 0:
+            break
+        elif option == 1:
+            name = int(input("Enter name of an airport: "))
+            system.insert(name)
         elif option == 2:
             name = input("Enter airport to remove: ")
             system.delete(name)
@@ -157,18 +170,14 @@ def main():
             name = input("Enter airport to edit information: ")
             system.update(name)
         elif option == 4:
-            for airport in system.airports:
-                print(airport.name, end=" ")
+            system.showAirports()
         elif option == 5:
-            break
+            start = int(input("Enter number you want to start: "))
+            end = int(input("Enter number you want to reach: "))
+            system.showPath(start, end)
         else:
             print("Unvalid option!!!")
             continue
 
 if __name__ == "__main__":
-    system = AirportSystem()
-    for i in range(300):
-        system.insert(Airport(str(i)))
-    system.showPath(0, 50)
-    system.showAirports()
-
+    main()
