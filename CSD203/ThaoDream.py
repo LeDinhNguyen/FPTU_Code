@@ -5,6 +5,9 @@ class Airport:
         self.cost = [0]
         self.number = 0
 
+    def showInfo(self):
+        print(f"\t- Name: {self.name} \n\t- Cost: {self.cost} \n\t- Number: {self.number}")
+
 class AirportSystem:
     def __init__(self):
         self.airports = []
@@ -31,8 +34,8 @@ class AirportSystem:
         if self.airports:
             newAirport.number = self.size
             for i in range(self.size):
-                # cost = int(input(f"Enter cost from {newAirport.name} to {self.airports[i].name}: "))
-                cost = random.randint(0, 200)
+                cost = int(input(f"Enter cost from {newAirport.name} to {self.airports[i].name}: "))
+                # cost = random.randint(0, 200)
                 print(f"Enter cost from {newAirport.name} to {self.airports[i].name}: ", cost)
                 self.airports[i].cost.append(cost)
                 newAirport.cost.insert(i, cost)
@@ -66,11 +69,11 @@ class AirportSystem:
         matrix = self.__toMatrix()
         print(" " * (space), end=" ")
         for i in range(self.size):
-            print(f" {self.airports[i].name.ljust(space)}", end= " ")
+            print(f" {str(self.airports[i].name).ljust(space)}", end= " ")
         print()
 
         for i in range(self.size):
-            print(self.airports[i].name.ljust(space), end= "|")
+            print(str(self.airports[i].name).ljust(space), end= "|")
             for j in range(self.size):
                 print(f" {str(matrix[i][j]).ljust(space)}", end="|")
             print()
@@ -143,14 +146,24 @@ class AirportSystem:
         else:
             print("There is existed airport at start or end destination!!!")
 
+    def airport(self, name: str):
+        for airport in self.airports:
+            if airport.name == name:
+                airport.showInfo()
+                return True
+        print("No airport!!!")
+        return False
+
 def menu():
     print("""
-        0. Exit
-        1. Add an airport
-        2. Remove an airport
-        3. Edit information of airport
-        4. Show all airports
-        5. Find shortest path
+    0. Exit
+    1. Add an airport
+    2. Remove an airport
+    3. Edit information of airport
+    4. Show all airports
+    5. Find shortest path
+    6. Show information of airport
+    7. Show Matrix
     """)
 
 def main():
@@ -175,6 +188,11 @@ def main():
             start = int(input("Enter number you want to start: "))
             end = int(input("Enter number you want to reach: "))
             system.showPath(start, end)
+        elif option == 6:
+            number = int(input("Name of airport: "))
+            system.airport(number)
+        elif option == 7:
+            system.showMatrix()
         else:
             print("Unvalid option!!!")
             continue

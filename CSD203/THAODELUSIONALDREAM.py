@@ -85,7 +85,7 @@ class AirPortMatrix():
             else:
                 # Nếu chưa tới thì cũng tìm được cái ngắn nhất thì update vào hàng sẽ đi qua
                 visited.add(currentNode)
-            # xét mấy đứa hàng xóm láng giềng
+            # xét mấy đứa hàng xóm láng giềng cua currentNode
             for neighbor in range(numNodes):
                 if neighbor not in visited and self.listOfCost()[currentNode][neighbor] > 0:
                     new_distance = distances[currentNode] + self.listOfCost()[currentNode][neighbor]
