@@ -43,5 +43,3 @@ if __name__ == "__main__":
   compressed_image = cv2.merge((compressed_b, compressed_g, compressed_r))
 
   compare_image(image, compressed_image)
-
-
