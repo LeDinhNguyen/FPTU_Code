@@ -1,26 +1,58 @@
-import ibm_db
-import sqlalchemy
+import mysql.connector
+from mysql.connector import Error
+import numpy as np
+import pandas as pd
 
+def test_connect():
+  try:
+    connection = mysql.connector.connect(
+      host='localhost',
+      database='demo',
+      user='root',
+      password='12345678'
+    )
+    if connection.is_connected():
+      db_Info = connection.get_server_info()
+      print("Connected to MySQL Server version ", db_Info)
+      cursor = connection.cursor()
+      cursor.execute("select database();")
+      record = cursor.fetchone()
+      print("You're connected to database: ", record)
 
-dsn_hostname = "1bbf73c5-d84a-4bb0-85b9-ab1a4348f4a4.c3n41cmd0nqnrk39u98g.databases.appdomain.cloud"
-dsn_uid = "xkk84284"        # e.g. "abc12345"
-dsn_pwd = "QdRxktEwkW0eOMFE"      # e.g. "7dBZ3wWt9XN6$o0J"
+  except Error as error:
+    print("Error while connecting to MySQL", error)
+  finally:
+    if connection.is_connected():
+      cursor.close()
+      connection.close()
+      print("MySQL connection is closed")
 
-dsn_driver = "{IBM DB2 ODBC DRIVER}"
-dsn_database = "bludb"            # e.g. "BLUDB"
-dsn_port = "32286"                # e.g. "32733"
-dsn_protocol = "TCPIP"            # i.e. "TCPIP"
-dsn_security = "SSL"    
+connection = mysql.connector.connect(
+  host='localhost',
+  database='demo',
+  user='root',
+  password='12345678'
+)
 
-dsn = f"""DATABASE={dsn_database};
-  HOSTNAME={dsn_hostname};
-  PORT={dsn_port};
-  PROTOCOL={dsn_protocol};
-  UID={dsn_uid};
-  PWD={dsn_pwd};
-"""
+cursor = connection.cursor()
+columns_query = "show columns from chicago from demo"
 
-ibm_db.connect( dsn, "", "")
+def query_cols(connection = connection, query: str = columns_query):
+  cursor = connection.cursor()
+  cursor.execute(query)
+  record = np.array(cursor.fetchall())
+  cols = record[:, 0]
+  print(cols)
+  return cols
+
+def query(connection = connection, query_string: str= ""):
+  cursor = connection.cursor()
+  cursor.execute(query_string)
+
+  records = cursor.fetchall()
+  table = pd.DataFrame(np.array(records))
+  print(table)
+  return table
 
 question_1 = """
   SELECT
@@ -52,3 +84,9 @@ WHERE COLLEGE_ELIGIBILITY__ NOT LIKE '%NDA%'
 ORDER BY College_Eligibility_Score DESC
 LIMIT 10;
 """
+
+# query(query_string="Select * from chicago")
+# query(query_string=question_1)
+# query(query_string=question_2)
+# query(query_string=question_3)
+# query(query_string=question_4)
