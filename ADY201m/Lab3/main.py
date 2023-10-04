@@ -56,24 +56,31 @@ def query(connection = connection, query_string: str= ""):
 
 question_1 = """
   SELECT
-      `Elementary, Middle, or High School`,
-      COUNT(*) as total_number_of_students
+      NAME_OF_SCHOOL,SAFETY_SCORE,
+      SAFETY_ICON
   FROM chicago
-  GROUP BY `Elementary, Middle, or High School`;
+  WHERE SAFETY_SCORE not like \'%NONE%\'
+  ORDER BY SAFETY_SCORE DESC LIMIT 5
 """
 
-question_2 = """"""
+question_2 = """
+SELECT 
+  ELEMENTARY__MIDDLE__OR_HIGH_SCHOOL, 
+  COUNT(*) as total_number_of_students 
+FROM CHICAGO_TAB 
+GROUP BY ELEMENTARY__MIDDLE__OR_HIGH_SCHOOL
+"""
 
 question_3 = """
   SELECT ROUND(AVG(CAST(REPLACE(AVERAGE_STUDENT_ATTENDANCE, '%', '') AS DECIMAL(5, 2))),2) AS average_attendance
   FROM (
-      SELECT 
-        Name_OF_SCHOOL,
-        AVERAGE_STUDENT_ATTENDANCE,
-        SAFETY_SCORE
-      FROM chicago
-      ORDER BY SAFETY_SCORE
-      LIMIT 10
+    SELECT 
+      Name_OF_SCHOOL,
+      AVERAGE_STUDENT_ATTENDANCE,
+      SAFETY_SCORE
+    FROM chicago
+    ORDER BY SAFETY_SCORE
+    LIMIT 10
   ) AS subquery;
 """
 
