@@ -15,9 +15,7 @@ def calcSn(n: int) -> float:
     for i in range(1, n+1):
         result += 1/i
 
-
     return result
-
 
 
 # Press the green button in the gutter to run the script.
