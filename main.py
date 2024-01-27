@@ -1,1 +1,1 @@
-from tensorflow_graphics import image
+from torch import nn
