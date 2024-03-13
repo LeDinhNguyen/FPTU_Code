@@ -164,4 +164,5 @@ cython_debug/
 
 # File
 *.pptx
+.DS_Store
 data/
