@@ -3,7 +3,7 @@ import pandas as pd
 from user import User
 from server import Server
 
-def find_the_best_server(user: User, server_list: list[tuple]):
+def find_the_best_server(user: User, server_list: list[Server]):
     nearby_list = user.find_nearby_servers(server_list)
     best = nearby_list[0]
     for server in nearby_list:
